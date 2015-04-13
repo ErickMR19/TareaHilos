@@ -155,7 +155,7 @@ int main(int argc, char ** argv){
 }
 
 void* sumarFilas(void* indicadorP){
-    int indicador = (int)indicadorP;
+    int indicador = (long)indicadorP;
     int i,j;
     if(indicador%2){
         i = 0;
