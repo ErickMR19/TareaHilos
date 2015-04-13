@@ -84,8 +84,11 @@ int main(int argc, char ** argv){
                 matrizLocal[i][j] = ( rand()%201 )-100;
             }
         }
-        std::cout << "por aca; despuess rell matz" << std::endl;
-        std::ofstream archivoListaP("Lista"+idProceso);
+        std::stringstream sstm;
+        sstm << "Lista" << idProceso;
+        
+        std::cout << "por aca; despuess rell matz. nmfile: " << sstm.str(); << std::endl;
+        std::ofstream archivoListaP(sstm.str());
         // verifica si puedo abrise
         if( archivoListaP.is_open() )
         {
