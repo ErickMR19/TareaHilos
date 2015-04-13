@@ -49,7 +49,7 @@ int main(int argc, char ** argv){
             std::cout << "Error en el numero ingresado, o ingresado un 0" << std::endl;
         }
         
-            // verifica que las matriz sea bidimensional
+        // verifica que las matriz sea bidimensional
         if( filas && columnas &&
             // verifica que el numero de filas sea par
             !(filas%2)
@@ -71,7 +71,6 @@ int main(int argc, char ** argv){
         // inicializa el arreglo de resultados
         arregloTotal = new int[filas];
         for(int i = 0; i < filas; ++i){
-            std::cout << i << " >-> " << arregloTotal[i] << std::endl;
             arregloTotal[i] = 0;
         }
         // pasa a todos los procesos la cantidad de filas
@@ -159,7 +158,7 @@ int main(int argc, char ** argv){
     else{
         // unicamente el proceso cero, indica que hubo un error en los parametros 
         if(idProceso == 0){
-            std::cout << "parametros incorrectos, el numero de procesos debe ser potencia de dos y la cantidad de elementos a ordenar debe ser multiplo de la cantidad de procesos" << std::endl;
+            std::cout << "parametros incorrectos" << std::endl;
        }
     }
     //Fin MPI
