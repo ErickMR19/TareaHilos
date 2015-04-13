@@ -18,6 +18,7 @@ int filas = 0;
 int columnas = 0;
 
 //procedimiento para el hilo
+void* sumarFilas(void*);
 
 nt main(int argc, char ** argv){
     // identificador de cada proceso;
@@ -74,15 +75,37 @@ nt main(int argc, char ** argv){
         MPI_Bcast(&columnas, 1, MPI_INT, 0, MPI_COMM_WORLD);
         
         //crea la matriz local de cada proceso 
-        arregloLocal = new int[filas];
+        arregloLocal = new int*[filas];
         for(int i = 0; i < filas; ++i){
             arregloLocal[i] = new int[columnas];
             for(int j = 0; j < columnas; ++j){
                 arregloLocal[i] = ( rand()%201 )-100;
             }
         }
+        std::ofstream archivoListaP("Lista"+idProceso+".txt");
+        // verifica si puedo abrise
+        if( archivoListaP.is_open() )
+        {
+            for(int i = 0; i < filas; ++i){
+                for(int j = 0; j < columnas; ++j){
+                    archivoListaP << arregloLocal[i] << " ";
+                }
+                archivoListaP << std::endl;
+            }
+            
+        }
+            
+        // los dos hilos que se van a usar para realizar la suma
+        pthread_t hiloA;
+        pthread_t hiloB;
         
+        pthread_create(&hilo1, NULL, hiloA, (void*)1);
+        pthread_create(&hilo1, NULL, hiloA, (void*)1);
+        
+        pthread_join(hilo1, NULL);
+        pthread_join(hilo2, NULL);
            
+        MPI_Reduce(arregloTotal, arregloTotal, filas, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
     }
         
         if(idProceso==0){
@@ -129,4 +152,22 @@ nt main(int argc, char ** argv){
     //Fin MPI
     MPI_Finalize();
     return 0;
+}
+
+void* sumarFilas(void* indicador){
+    int indicador = (int)indicador;
+    int i,f;
+    if(indicador%2){
+        i = 0;
+        j = filas/2;
+    }
+    else{
+        i = filas/2;
+        j = filas;
+    }
+    for(;i<j;++i){
+        for(int c = 0; c < columnas;++c){
+            arregloTotal[i] += matrizLocal[i][c];
+        }
+    }
 }
