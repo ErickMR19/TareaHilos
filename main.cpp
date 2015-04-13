@@ -146,7 +146,7 @@ int main(int argc, char ** argv){
     else{
         // unicamente el proceso cero, indica que hubo un error en los parametros 
         if(idProceso == 0){
-            std::cout << "parametros incorrectos, el numero de procesos debe ser potencia de dos y la cantidad de elementos a ordenar debe ser multiplo de la cantidad de procesos" << std::end;
+            std::cout << "parametros incorrectos, el numero de procesos debe ser potencia de dos y la cantidad de elementos a ordenar debe ser multiplo de la cantidad de procesos" << std::endl;
        }
     }
     //Fin MPI
@@ -154,9 +154,9 @@ int main(int argc, char ** argv){
     return 0;
 }
 
-void* sumarFilas(void* indicador){
-    int indicador = (int)indicador;
-    int i,f;
+void* sumarFilas(void* indicadorP){
+    int indicador = (int)indicadorP;
+    int i,j;
     if(indicador%2){
         i = 0;
         j = filas/2;
