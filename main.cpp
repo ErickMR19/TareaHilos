@@ -68,8 +68,12 @@ int main(int argc, char ** argv){
     MPI_Bcast(&parametrosCorrectos, 1, MPIR_CXX_BOOL, 0, MPI_COMM_WORLD);
     
     if( parametrosCorrectos ){
-            // inicializa el arreglo de resultados
-            arregloTotal = new int[filas];
+        // inicializa el arreglo de resultados
+        arregloTotal = new int[filas];
+        for(int i = 0; i < filas; ++i){
+            std::cout << i << " -> " << arregloTotal[i] << std::endl;
+            arregloTotal[i] = 0;
+        }
         std::cout << "por aca; parametros correctos" << std::endl;
         // pasa a todos los procesos la cantidad de filas
         MPI_Bcast(&filas, 1, MPI_INT, 0, MPI_COMM_WORLD);
