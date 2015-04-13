@@ -179,8 +179,10 @@ void* sumarFilas(void* indicadorP){
     }
     for(;i<j;++i){
         for(int c = 0; c < columnas;++c){
+            std::cout << "antes : " << arregloTotal[i] << std::endl;
             std::cout << i << " : " << c << " -> " <<  matrizLocal[i][c] << std::endl;
             arregloTotal[i] += matrizLocal[i][c];
+            std::cout << "despues: " << arregloTotal[i];
         }
     }
 }
