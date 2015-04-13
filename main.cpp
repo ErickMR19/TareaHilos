@@ -20,7 +20,7 @@ int columnas = 0;
 //procedimiento para el hilo
 void* sumarFilas(void*);
 
-iant main(int argc, char ** argv){
+int main(int argc, char ** argv){
     // identificador de cada proceso;
     int idProceso;
     // numero total de procesos;
@@ -79,7 +79,7 @@ iant main(int argc, char ** argv){
         for(int i = 0; i < filas; ++i){
             matrizLocal[i] = new int[columnas];
             for(int j = 0; j < columnas; ++j){
-                matrizLocal[i] = ( rand()%201 )-100;
+                matrizLocal[i][j] = ( rand()%201 )-100;
             }
         }
         std::ofstream archivoListaP("Lista"+idProceso);
@@ -99,8 +99,8 @@ iant main(int argc, char ** argv){
         pthread_t hiloA;
         pthread_t hiloB;
         
-        pthread_create(&hiloA, NULL, hiloA, (void*)1);
-        pthread_create(&hiloB, NULL, hiloA, (void*)1);
+        pthread_create(&hiloA, NULL, sumarFilas, (void*)1);
+        pthread_create(&hiloB, NULL, sumarFilas, (void*)1);
         
         pthread_join(hiloA, NULL);
         pthread_join(hiloB, NULL);
@@ -117,7 +117,7 @@ iant main(int argc, char ** argv){
             {
                 // copia los elementos del arreglo en el archivo
                 for(int i = 0; i < filas;++i){
-                    archivoListaFinal << arregloTocal[i] << std::endl;
+                    archivoListaFinal << arregloTotal[i] << std::endl;
                 }
             }
             else{
@@ -133,7 +133,7 @@ iant main(int argc, char ** argv){
             if(respuesta == 'S' | respuesta == 's')
             {
                 for(int i=0; i<filas;++i){
-                    std::cout << arregloTocal[i] << std::endl;
+                    std::cout << arregloTotal[i] << std::endl;
                 }
             }
             
