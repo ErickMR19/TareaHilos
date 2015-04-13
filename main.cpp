@@ -116,11 +116,10 @@ int main(int argc, char ** argv){
         pthread_join(hiloA, NULL);
         pthread_join(hiloB, NULL);
            
-        MPI_Reduce(arregloTotal, arregloTotal, filas, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+       // MPI_Reduce(arregloTotal, arregloTotal, filas, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
     }
         
         if(idProceso==0){
-            delete[] arregloTotal;
             // abre el archivo ListaF
             std::ofstream archivoListaFinal("ListaF.txt");
             // verifica si puedo abrise
@@ -148,6 +147,7 @@ int main(int argc, char ** argv){
                 }
             }
             
+            delete[] arregloTotal;
             // elimina su arreglo local antes de finalizar
             delete[] matrizLocal;
         }
