@@ -71,10 +71,9 @@ int main(int argc, char ** argv){
         // inicializa el arreglo de resultados
         arregloTotal = new int[filas];
         for(int i = 0; i < filas; ++i){
-            std::cout << i << " -> " << arregloTotal[i] << std::endl;
+            std::cout << i << " >-> " << arregloTotal[i] << std::endl;
             arregloTotal[i] = 0;
         }
-        std::cout << "por aca; parametros correctos" << std::endl;
         // pasa a todos los procesos la cantidad de filas
         MPI_Bcast(&filas, 1, MPI_INT, 0, MPI_COMM_WORLD);
         /// pasa a todos los procesos la cantidad de columnas
@@ -92,7 +91,6 @@ int main(int argc, char ** argv){
         std::stringstream sstm;
         sstm << "Lista" << idProceso;
         
-        std::cout << "por aca; despuess rell matz. nmfile: " << sstm.str() << std::endl;
         std::ofstream archivoListaP(sstm.str().c_str());
         // verifica si puedo abrise
         if( archivoListaP.is_open() )
@@ -170,7 +168,6 @@ int main(int argc, char ** argv){
 }
 
 void* sumarFilas(void* indicadorP){
-    std::cout << "hilos" << std::endl;
     int indicador = (long)indicadorP;
     int i,j;
     if(indicador%2){
