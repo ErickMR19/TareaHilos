@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
-
+#include <sstream>
 #include "mpi.h"
 #include <pthread.h>
 
@@ -87,8 +87,8 @@ int main(int argc, char ** argv){
         std::stringstream sstm;
         sstm << "Lista" << idProceso;
         
-        std::cout << "por aca; despuess rell matz. nmfile: " << sstm.str(); << std::endl;
-        std::ofstream archivoListaP(sstm.str());
+        std::cout << "por aca; despuess rell matz. nmfile: " << sstm.str() << std::endl;
+        std::ofstream archivoListaP(sstm.str().c_str());
         // verifica si puedo abrise
         if( archivoListaP.is_open() )
         {
