@@ -41,9 +41,9 @@ int main(int argc, char ** argv){
     if( idProceso == 0 ){
         srand(time(0));
         // solicita el numero de elementos que contendra el arreglo
-        std::cout << "Inserte el numero de columnas";
+        std::cout << "Inserte el numero de columnas: ";
         std::cin >> columnas;
-        std::cout << "Inserte el numero de filas";
+        std::cout << "Inserte el numero de filas: ";
         std::cin >> filas;
         if(! filas || ! columnas){ // se ingreso un numero invalido
             std::cout << "Error en el numero ingresado, o ingresado un 0" << std::endl;
@@ -81,7 +81,6 @@ int main(int argc, char ** argv){
         
         //crea la matriz local de cada proceso 
         matrizLocal = new int*[filas];
-        std::cout << "por aca; antes rell matriz" << std::endl;
         for(int i = 0; i < filas; ++i){
             matrizLocal[i] = new int[columnas];
             for(int j = 0; j < columnas; ++j){
@@ -113,13 +112,13 @@ int main(int argc, char ** argv){
         
         pthread_join(hiloA, NULL);
         pthread_join(hiloB, NULL);
-           
-         for(int i = 0; i<filas;++i){
-             std::cout << idProceso << " : " << "vctTotal[" << i << "]: " <<  arregloTotal[i] << std::endl;
-         }
+        
+        for(int i = 0; i < filas; ++i){
+            delete[] matrizLocal[i];
+        }
+        delete[] matrizLocal;
            
         MPI_Reduce(arregloTotal, arregloTotal, filas, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-    }
         
         if(idProceso==0){
             // abre el archivo ListaF
@@ -148,13 +147,9 @@ int main(int argc, char ** argv){
                     std::cout << arregloTotal[i] << std::endl;
                 }
             }
-            
-            delete[] arregloTotal;
-            // elimina su arreglo local antes de finalizar
-            delete[] matrizLocal;
         }
-        
-    
+        delete[] arregloTotal;  
+    }
     // no se lleva a cabo la ejecucion
     else{
         // unicamente el proceso cero, indica que hubo un error en los parametros 
@@ -180,10 +175,7 @@ void* sumarFilas(void* indicadorP){
     }
     for(;i<j;++i){
         for(int c = 0; c < columnas;++c){
-            std::cout << "antes : " << arregloTotal[i] << std::endl;
-            std::cout << i << " : " << c << " -> " <<  matrizLocal[i][c] << std::endl;
             arregloTotal[i] += matrizLocal[i][c];
-            std::cout << "despues: " << arregloTotal[i] << std::endl;
         }
     }
 }
