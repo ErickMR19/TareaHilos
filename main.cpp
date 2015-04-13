@@ -106,7 +106,7 @@ int main(int argc, char ** argv){
         pthread_t hiloB;
         
         pthread_create(&hiloA, NULL, sumarFilas, (void*)1);
-        pthread_create(&hiloB, NULL, sumarFilas, (void*)1);
+        pthread_create(&hiloB, NULL, sumarFilas, (void*)0);
         
         pthread_join(hiloA, NULL);
         pthread_join(hiloB, NULL);
@@ -161,6 +161,7 @@ int main(int argc, char ** argv){
 }
 
 void* sumarFilas(void* indicadorP){
+    std::cout << "hilos" << std::endl;
     int indicador = (long)indicadorP;
     int i,j;
     if(indicador%2){
@@ -173,6 +174,7 @@ void* sumarFilas(void* indicadorP){
     }
     for(;i<j;++i){
         for(int c = 0; c < columnas;++c){
+            std::cout << i << " : " << c << " -> " <<  matrizLocal[i][c] << std::endl;
             arregloTotal[i] += matrizLocal[i][c];
         }
     }
