@@ -17,7 +17,7 @@ int **matrizLocal;
 int filas = 0;
 int columnas = 0;
 
-//procedimiento para el hilo
+//procedimiento para que correra cada hilo
 void* sumarFilas(void*);
 
 int main(int argc, char ** argv){
@@ -54,7 +54,7 @@ int main(int argc, char ** argv){
             !(filas%2)
          )
         {
-            
+            // es valido
         }
         else {
             std::cout << "ejecucion terminada con error, el numero de filas debe ser par" << std::endl;
@@ -63,7 +63,7 @@ int main(int argc, char ** argv){
         
         
     }
-    //Espera todos los procesos
+    //Espera todos los procesos y dice si la ejecuicion continua
     MPI_Bcast(&parametrosCorrectos, 1, MPIR_CXX_BOOL, 0, MPI_COMM_WORLD);
     
     if( parametrosCorrectos ){
@@ -72,8 +72,10 @@ int main(int argc, char ** argv){
         /// pasa a todos los procesos la cantidad de columnas
         MPI_Bcast(&columnas, 1, MPI_INT, 0, MPI_COMM_WORLD);
         
+        //iniciliza la semilla del random utilizando otros parametros para que varie de proceso a proceso
         srand(time(0)+idProceso*filas+idProceso/columnas);
         srand(time(0)+rand()*numProcesos);
+        
         // inicializa el arreglo de resultados
         arregloTotal = new int[filas];
         for(int i = 0; i < filas; ++i){
@@ -88,42 +90,31 @@ int main(int argc, char ** argv){
                 matrizLocal[i][j] = ( rand()%201 )-100;
             }
         }
-        std::stringstream sstm;
-        sstm << "Lista" << idProceso;
         
-        std::ofstream archivoListaP(sstm.str().c_str());
-        // verifica si puedo abrise
-        if( archivoListaP.is_open() )
-        {
-            for(int i = 0; i < filas; ++i){
-                for(int j = 0; j < columnas; ++j){
-                    archivoListaP << matrizLocal[i][j] << " ";
-                }
-                archivoListaP << std::endl;
-            }
-            
-        }
-            
-        // los dos hilos que se van a usar para realizar la suma
+        //  los hilos que haran la suma
         pthread_t hiloA;
         pthread_t hiloB;
         
+        // pone a correr los hilos que haran la suma
         pthread_create(&hiloA, NULL, sumarFilas, (void*)1);
         pthread_create(&hiloB, NULL, sumarFilas, (void*)0);
         
+        // espera a que los hilos terminen
         pthread_join(hiloA, NULL);
         pthread_join(hiloB, NULL);
         
+        //elimina la matriz local
         for(int i = 0; i < filas; ++i){
             delete[] matrizLocal[i];
         }
         delete[] matrizLocal;
            
+        //reduce todas las sumas por filas a un solo arreglo
         MPI_Reduce(arregloTotal, arregloTotal, filas, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
         
         if(idProceso==0){
-            // abre el archivo ListaF
-            std::ofstream archivoListaFinal("ListaF.txt");
+            // abre el archivo V
+            std::ofstream archivoListaFinal("V.txt");
             // verifica si puedo abrise
             if( archivoListaFinal.is_open() )
             {
@@ -133,13 +124,13 @@ int main(int argc, char ** argv){
                 }
             }
             else{
-                std::cerr << "No se pudo crear el archivo ListaI.txt" << std::endl;
+                std::cerr << "No se pudo crear el archivo V.txt" << std::endl;
                 //Se advierte pero se continua con la ejecución normal
             }
             
             // variable para la respuesta del usuario
             char respuesta = 0;
-            std::cout << "Desea que se muestre en pantalla el vector ordenado? ( S | [N] )";
+            std::cout << "Desea que se muestre en pantalla el vector de sumas? ( S | [N] )";
             std::cin >> respuesta;
             // si el usuario selecciono ver el resultado en pantalla lo imprime
             if(respuesta == 'S' | respuesta == 's')
@@ -164,9 +155,11 @@ int main(int argc, char ** argv){
 }
 
 void* sumarFilas(void* indicadorP){
+    // convierte el valor enviado por parametro
     int indicador = (long)indicadorP;
     int i,j;
-    if(indicador%2){
+    //verifica si le toca sumar la primera o la segunda mitad
+    if(indicador){
         i = 0;
         j = filas/2;
     }
@@ -174,6 +167,7 @@ void* sumarFilas(void* indicadorP){
         i = filas/2;
         j = filas;
     }
+    //realiza la suma
     for(;i<j;++i){
         for(int c = 0; c < columnas;++c){
             arregloTotal[i] += matrizLocal[i][c];
