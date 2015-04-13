@@ -69,6 +69,7 @@ int main(int argc, char ** argv){
     MPI_Bcast(&parametrosCorrectos, 1, MPIR_CXX_BOOL, 0, MPI_COMM_WORLD);
     
     if( parametrosCorrectos ){
+        std::cout << "por aca; parametros correctos" << std::endl;
         // pasa a todos los procesos la cantidad de filas
         MPI_Bcast(&filas, 1, MPI_INT, 0, MPI_COMM_WORLD);
         /// pasa a todos los procesos la cantidad de columnas
@@ -76,12 +77,14 @@ int main(int argc, char ** argv){
         
         //crea la matriz local de cada proceso 
         matrizLocal = new int*[filas];
+        std::cout << "por aca; antes rell matriz" << std::endl;
         for(int i = 0; i < filas; ++i){
             matrizLocal[i] = new int[columnas];
             for(int j = 0; j < columnas; ++j){
                 matrizLocal[i][j] = ( rand()%201 )-100;
             }
         }
+        std::cout << "por aca; despuess rell matz" << std::endl;
         std::ofstream archivoListaP("Lista"+idProceso);
         // verifica si puedo abrise
         if( archivoListaP.is_open() )
