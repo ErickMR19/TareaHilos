@@ -116,7 +116,11 @@ int main(int argc, char ** argv){
         pthread_join(hiloA, NULL);
         pthread_join(hiloB, NULL);
            
-       // MPI_Reduce(arregloTotal, arregloTotal, filas, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+         for(int i = 0; i<filas;++i){
+             std::cout << idProceso << " : " << "vctTotal[" << i << "]: " <<  arregloTotal[i] << std::endl;
+         }
+           
+        MPI_Reduce(arregloTotal, arregloTotal, filas, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
     }
         
         if(idProceso==0){
@@ -182,7 +186,7 @@ void* sumarFilas(void* indicadorP){
             std::cout << "antes : " << arregloTotal[i] << std::endl;
             std::cout << i << " : " << c << " -> " <<  matrizLocal[i][c] << std::endl;
             arregloTotal[i] += matrizLocal[i][c];
-            std::cout << "despues: " << arregloTotal[i];
+            std::cout << "despues: " << arregloTotal[i] << std::endl;
         }
     }
 }
