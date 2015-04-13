@@ -20,7 +20,7 @@ int columnas = 0;
 //procedimiento para el hilo
 void* sumarFilas(void*);
 
-nt main(int argc, char ** argv){
+iant main(int argc, char ** argv){
     // identificador de cada proceso;
     int idProceso;
     // numero total de procesos;
@@ -75,20 +75,20 @@ nt main(int argc, char ** argv){
         MPI_Bcast(&columnas, 1, MPI_INT, 0, MPI_COMM_WORLD);
         
         //crea la matriz local de cada proceso 
-        arregloLocal = new int*[filas];
+        matrizLocal = new int*[filas];
         for(int i = 0; i < filas; ++i){
-            arregloLocal[i] = new int[columnas];
+            matrizLocal[i] = new int[columnas];
             for(int j = 0; j < columnas; ++j){
-                arregloLocal[i] = ( rand()%201 )-100;
+                matrizLocal[i] = ( rand()%201 )-100;
             }
         }
-        std::ofstream archivoListaP("Lista"+idProceso+".txt");
+        std::ofstream archivoListaP("Lista"+idProceso);
         // verifica si puedo abrise
         if( archivoListaP.is_open() )
         {
             for(int i = 0; i < filas; ++i){
                 for(int j = 0; j < columnas; ++j){
-                    archivoListaP << arregloLocal[i] << " ";
+                    archivoListaP << matrizLocal[i][j] << " ";
                 }
                 archivoListaP << std::endl;
             }
@@ -99,11 +99,11 @@ nt main(int argc, char ** argv){
         pthread_t hiloA;
         pthread_t hiloB;
         
-        pthread_create(&hilo1, NULL, hiloA, (void*)1);
-        pthread_create(&hilo1, NULL, hiloA, (void*)1);
+        pthread_create(&hiloA, NULL, hiloA, (void*)1);
+        pthread_create(&hiloB, NULL, hiloA, (void*)1);
         
-        pthread_join(hilo1, NULL);
-        pthread_join(hilo2, NULL);
+        pthread_join(hiloA, NULL);
+        pthread_join(hiloB, NULL);
            
         MPI_Reduce(arregloTotal, arregloTotal, filas, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
     }
@@ -116,8 +116,8 @@ nt main(int argc, char ** argv){
             if( archivoListaFinal.is_open() )
             {
                 // copia los elementos del arreglo en el archivo
-                for(int i = 0; i < tamArreglo;++i){
-                    archivoListaFinal << arregloLocal[i] << std::endl;
+                for(int i = 0; i < filas;++i){
+                    archivoListaFinal << arregloTocal[i] << std::endl;
                 }
             }
             else{
@@ -132,13 +132,13 @@ nt main(int argc, char ** argv){
             // si el usuario selecciono ver el resultado en pantalla lo imprime
             if(respuesta == 'S' | respuesta == 's')
             {
-                for(int i=0; i<tamArreglo;++i){
-                    std::cout << arregloLocal[i] << std::endl;
+                for(int i=0; i<filas;++i){
+                    std::cout << arregloTocal[i] << std::endl;
                 }
             }
             
             // elimina su arreglo local antes de finalizar
-            delete[] arregloLocal;
+            delete[] matrizLocal;
         }
         
     }
