@@ -68,15 +68,16 @@ int main(int argc, char ** argv){
     MPI_Bcast(&parametrosCorrectos, 1, MPIR_CXX_BOOL, 0, MPI_COMM_WORLD);
     
     if( parametrosCorrectos ){
+        // pasa a todos los procesos la cantidad de filas
+        MPI_Bcast(&filas, 1, MPI_INT, 0, MPI_COMM_WORLD);
+        /// pasa a todos los procesos la cantidad de columnas
+        MPI_Bcast(&columnas, 1, MPI_INT, 0, MPI_COMM_WORLD);
+        
         // inicializa el arreglo de resultados
         arregloTotal = new int[filas];
         for(int i = 0; i < filas; ++i){
             arregloTotal[i] = 0;
         }
-        // pasa a todos los procesos la cantidad de filas
-        MPI_Bcast(&filas, 1, MPI_INT, 0, MPI_COMM_WORLD);
-        /// pasa a todos los procesos la cantidad de columnas
-        MPI_Bcast(&columnas, 1, MPI_INT, 0, MPI_COMM_WORLD);
         
         //crea la matriz local de cada proceso 
         matrizLocal = new int*[filas];
