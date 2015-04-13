@@ -55,8 +55,7 @@ int main(int argc, char ** argv){
             !(filas%2)
          )
         {
-            // inicializa el arreglo de resultados
-            arregloTotal = new int[filas];
+            
         }
         else {
             std::cout << "ejecucion terminada con error, el numero de filas debe ser par" << std::endl;
@@ -69,6 +68,8 @@ int main(int argc, char ** argv){
     MPI_Bcast(&parametrosCorrectos, 1, MPIR_CXX_BOOL, 0, MPI_COMM_WORLD);
     
     if( parametrosCorrectos ){
+            // inicializa el arreglo de resultados
+            arregloTotal = new int[filas];
         std::cout << "por aca; parametros correctos" << std::endl;
         // pasa a todos los procesos la cantidad de filas
         MPI_Bcast(&filas, 1, MPI_INT, 0, MPI_COMM_WORLD);
