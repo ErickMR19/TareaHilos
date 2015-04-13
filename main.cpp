@@ -39,7 +39,6 @@ int main(int argc, char ** argv){
     MPI_Comm_rank(MPI_COMM_WORLD,&idProceso);
     
     if( idProceso == 0 ){
-        srand(time(0));
         // solicita el numero de elementos que contendra el arreglo
         std::cout << "Inserte el numero de columnas: ";
         std::cin >> columnas;
@@ -68,6 +67,7 @@ int main(int argc, char ** argv){
     MPI_Bcast(&parametrosCorrectos, 1, MPIR_CXX_BOOL, 0, MPI_COMM_WORLD);
     
     if( parametrosCorrectos ){
+        srand(time(0));
         // pasa a todos los procesos la cantidad de filas
         MPI_Bcast(&filas, 1, MPI_INT, 0, MPI_COMM_WORLD);
         /// pasa a todos los procesos la cantidad de columnas
