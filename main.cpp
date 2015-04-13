@@ -141,13 +141,13 @@ int main(int argc, char ** argv){
             delete[] matrizLocal;
         }
         
-    }
+    
     // no se lleva a cabo la ejecucion
     else{
         // unicamente el proceso cero, indica que hubo un error en los parametros 
         if(idProceso == 0){
-            std::cout << "parametros incorrectos, el numero de procesos debe ser potencia de dos y la cantidad de elementos a ordenar debe ser multiplo de la cantidad de procesos" << std::endl;
-        }
+            std::cout << "parametros incorrectos, el numero de procesos debe ser potencia de dos y la cantidad de elementos a ordenar debe ser multiplo de la cantidad de procesos" << std::end;
+       }
     }
     //Fin MPI
     MPI_Finalize();
