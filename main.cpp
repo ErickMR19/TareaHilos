@@ -3,6 +3,21 @@
 #include <fstream>
 
 #include "mpi.h"
+#include <pthread.h>
+
+/**
+ * variables globales, para los hilos
+**/
+
+// puntero a los arreglos
+int * arregloTotal;
+int **matrizLocal;
+
+// cantidad de numeros de la matriz
+int filas = 0;
+int columnas = 0;
+
+//procedimiento para el hilo
 
 nt main(int argc, char ** argv){
     // identificador de cada proceso;
@@ -12,9 +27,6 @@ nt main(int argc, char ** argv){
     // Iniciliza MPI
     MPI_Init(&argc,&argv);
     MPI_Status status;
-    // puntero a los arreglos
-    int * arregloTotal;
-    int **matrizLocal;
     
     // bandera de comprobacion
     bool parametrosCorrectos = true;
@@ -24,10 +36,6 @@ nt main(int argc, char ** argv){
    
     //Obtiene el identificador del proceso
     MPI_Comm_rank(MPI_COMM_WORLD,&idProceso);
-       
-    // cantidad de numeros de la matriz
-    int filas = 0;
-    int columnas = 0;
     
     if( idProceso == 0 ){
         srand(time(0));
